@@ -22,7 +22,7 @@ ifeq ($(findstring src/hg/,${CURDIR}),src/hg/)
   DEPLIBS = ${preMyLibs} ${kentSrc}/lib/${MACHTYPE}/jkhgap.a ${kentSrc}/lib/${MACHTYPE}/jkweb.a
 endif
 
-LINKLIBS = ${DEPLIBS} ${MYSQLLIBS}
+LINKLIBS = ${DEPLIBS} ${MYSQLLIBS} -lssl
 
 O = ${A}.o
 objects = ${O} ${extraObjects} ${externObjects}
