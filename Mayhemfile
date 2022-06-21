@@ -1,6 +1,6 @@
-project: rnshah9/kent
+project: kent
 target: bamToPsl
 
 cmds:
-  - cmd: /root/bin/x86_64/bamToPsl @@ out.psl
+  - cmd: /root/bin/x86_64/bamToPsl /test.bam out.psl
     filepath: /test.bam
