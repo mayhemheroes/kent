@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:22.04 as builder
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential libssl-dev libz-dev libpng-dev uuid-dev libmysqlclient-dev
@@ -15,3 +15,12 @@ WORKDIR /repo/src/htslib
 RUN make -j8
 WORKDIR /repo/src/utils/bamToPsl
 RUN make -j8
+
+RUN mkdir -p /deps
+RUN ldd /root/bin/x86_64/bamToPsl | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'cp % /deps;'
+
+FROM ubuntu:22.04 as package
+
+COPY --from=builder /deps /deps
+COPY --from=builder /root/bin/x86_64/bamToPsl /root/bin/x86_64/bamToPsl
+ENV LD_LIBRARY_PATH=/deps
