@@ -2,5 +2,4 @@ project: kent
 target: bamToPsl
 
 cmds:
-  - cmd: /root/bin/x86_64/bamToPsl /test.bam out.psl
-    filepath: /test.bam
+  - cmd: /bamToPsl @@ out.psl
