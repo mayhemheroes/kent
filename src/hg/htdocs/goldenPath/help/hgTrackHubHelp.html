@@ -35,6 +35,8 @@
   <li>
   <a href="trackDb/trackDbHub.html" target="_blank">Track Database Definition Document</a> 
   (Reference guide for trackDb parameter definitions)</li> 
+  <li><a href="https://genome-blog.soe.ucsc.edu/blog/2022/06/28/track-hub-settings/" target=
+  "_blank">Track hub settings blog post</a></li>
   <li>
   <a href="http://genomewiki.ucsc.edu/index.php/Public_Hub_Guidelines" target="_blank">Public Hub 
   Guidelines Wiki</a></li> 
@@ -408,7 +410,7 @@ directory hierarchy. The location of a track file is defined by its <em>bigDataU
 associated trackDb.txt file (Step 7).</p>
 <hr> 
 <p>
-<strong>Step 4. Create the hub.txt file</strong><br> 
+<strong id="hub.txt">Step 4. Create the hub.txt file</strong><br>
 Within the hub directory, create a hub.txt file containing a single stanza with up to six fields 
 that define properties of the track hub:</p>
 <pre><code><strong>hub</strong> <em>hub_name</em>
@@ -418,27 +420,43 @@ that define properties of the track hub:</p>
 <strong>email</strong> <em>email_address</em>
 <strong>descriptionUrl</strong> <em>descriptionUrl</em> </code></pre>
 <p>
-<em>hub</em> - a single-word name of the directory containing the track hub files. Not displayed to 
+<em id="hub">hub</em>
+- a single-word name of the directory containing the track hub files. Not displayed to
 hub users. This must be the first line in the hub.txt file.</p>
 <p>
-<em>shortLabel</em> - the short name for the track hub. Suggested maximum length is 17 characters.  
+<em id="shortLabel">shortLabel</em>
+- the short name for the track hub. Suggested maximum length is 17 characters.
 Displayed as the hub name on the Track Hubs page and the track group name on the browser tracks 
 page.</p>
 <p>
-<em>longLabel</em> - a longer descriptive label for the track hub. Suggested maximum length is 80 
+<em id="longLabel">longLabel</em>
+- a longer descriptive label for the track hub. Suggested maximum length is 80
 characters.  Displayed in the description field on the Track Hubs page.</p>
 <p>
-<em>genomesFile</em> - the relative path of the genomes.txt file, which contains the list of genome 
+<em id="genomesFile">genomesFile</em>
+- the relative path of the genomes.txt file, which contains the list of genome
 assemblies covered by the track data and the names of their associated configuration files. By 
 convention the genomes.txt file is located in the same directory as the hub.txt file.</p>
 <p>
-<em>email</em> - the contact to whom questions regarding the track hub should be directed.</p>
+<em id="email">email</em>
+- the contact to whom questions regarding the track hub should be directed.</p>
 <p>
-<em>descriptionUrl</em> - URL to HTML page with a description of the hub's contents. This can be
+<em id="descriptionUrl">descriptionUrl</em>
+- URL to HTML page with a description of the hub's contents. This can be
 relative to the directory which holds hub.txt. This file is assumed to be HTML, and if the hub is a 
 UCSC public hub, this HTML will be crawled nightly by UCSC to build an index with which public hubs 
 can be searched. If present, clicks on the shortLabel will open this HTML in a new tab. This field 
 is optional.</p>
+<p>
+<em id="useOneFile">useOneFile on</em>
+- only use this setting if your hub is displaying one genome and
+if you wish to put all information into only one file: hub.txt. This setting allows you
+to put the text lines of <a target="_blank" href="#genomes.txt"><code>genomes.txt</code></a>
+and <a target="_blank" href="#trackDb.txt"><code>trackDb.txt</code></a> all into the singular
+<a target="_blank" href="#hub.txt"><code>hub.txt</code></a>file. To learn more about
+this setting click  <b><a target="_blank" href="hgTracksHelp.html#UseOneFile"><code>useOneFile on</code></a></b>
+and see a <a href="examples/hubExamples/hubUseOneFile/singleFileHubExample.txt"
+target="_blank">working example here</a>.</p>
 <p>
 <strong><em>Example 2:</em></strong> Sample hub.txt file defining attributes for the track hub 
 shown in <em>Example 1</em>.</p>
@@ -481,11 +499,11 @@ file should start with a '#' and have the field names for each column, one of th
 If this genomes.txt file is for an assembly that does not have native support in the browser, the 
 following fields must also be present:</p>
 <p>
-<em>twoBitPath</em> - refers to the .2bit file containing the sequence for this assembly. Typically 
+<em id="twoBitPath">twoBitPath</em> - refers to the .2bit file containing the sequence for this assembly. Typically
 this file is constructed from the original fasta files for the sequence using the kent program 
 faToTwoBit. See <a href="twoBit.html">here</a> for instructions on how to build a 2bit file.</p> 
 <p>
-<em>groups</em> - a file which defines the track groups on this Genome Browser. Track groups are the
+<em id="groups">groups</em> - a file which defines the track groups on this Genome Browser. Track groups are the
 sections of related tracks grouped together under the primary genome browser graphics display image.
 The groups.txt file defines the grouping of track controls under the primary Genome Browser image 
 display. The example referenced here has the usual definitions as found in the UCSC Genome Browser.
@@ -500,25 +518,26 @@ group. The label is displayed on the genome browser as the title of this group o
 The priority orders this track group with the other track groups. The defaultIsClosed determines if 
 this track group is expanded or closed by default. Values to use are 0 or 1.</p>
 <p>
-<em>description</em> - will be displayed for user information on the gateway page and most title 
+<em id="description">description</em> - will be displayed for user information on the gateway page and most title
 pages of this genome assembly browser. It is the name displayed in the assembly pull-down menu on 
 the browser gateway page.</p>
 <p>
-<em>organism</em> - the string which is displayed along with the description on most title pages in the Genome Browser. Adjust your names in organism and description until they are appropriate. This 
+<em id="organism">organism</em> - the string which is displayed along with the description on most title pages
+in the Genome Browser. Adjust your names in organism and description until they are appropriate. This
 organism name is the name that appears in the genome pull-down menu on the browser gateway page.</p>
 <p>
-<em>defaultPos</em> - specifies the default position the genome browser will open when a user first 
-views this assembly. This is usually selected to highlight a popular gene or region of interest in 
+<em id="scientificName">scientificName</em> - specifies the scientific name for the assembly.</p>
+<p>
+<em id="defaultPos">defaultPos</em> - specifies the default position the genome browser will open when a user first
+views this assembly. This is usually selected to highlight a popular gene or region of interest in
 the genome assembly.</p>
 <p>
 <em>orderKey </em> - used with other genome definitions at this hub to order the pull-down menu 
 ordering the genome pull-down menu.</p>
 <p>
-<em>htmlPath</em> - refers to an html file that is used on the gateway page to display information 
-about the assembly.</p>
-<p>
-<strong><em>Example 3:</em></strong> Sample genomes.txt file defining attributes for the hub shown 
-in <em>Example 1</em>.</p>
+<em id="htmlPath">htmlPath</em> - refers to an html file that is used on the gateway page to display
+information for a novel assembly.</p>
+<h6 id="example_genomes.txt">Example genomes.txt including a newOrg1 assembly</h6>
 <pre><code><strong>genome</strong> hg18
 <strong>trackDb</strong> hg18/trackDb.txt
 <br>
@@ -543,7 +562,7 @@ track data in the hub. The subdirectory names must have a 1:1 correspondence wit
 defined by the <em>genome</em> tags in the genomes.txt file.</p>
 <hr>
 <p>
-<strong>Step 7. Create the trackDb.txt files</strong><br>
+<strong id="trackDb.txt">Step 7. Create the trackDb.txt files</strong><br>
 The trackDb.txt file, which is based on the Genome Browser .ra format, is the most complicated of 
 the text files in the hub directory. It contains a stanza for each of the data files for the given 
 assembly that defines display and configuration properties for the track. If the tracks are grouped 

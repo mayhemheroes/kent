@@ -300,16 +300,18 @@
 <DIV class="html"><span class="types all"></span>
 <div class="format"><code>html</code></div>
     <P class="isRequired">Required: No</P>
-    <p>To help users understand your data we request you provide
-    a web page that explains what your Track Hub is presenting.</p>
     <p>Use the <code>html path/to/explain.html</code> to specify the file
     that contains the complete description of a track in HTML format.
     The path of this file name is relative to the path of the trackDb file, or it
-    can be a full URL. It is also possible to have the &quot.html&quot; suffix implied,
+    can be a full URL. It is also possible to have the &quot;.html&quot; suffix implied,
     for instance just have <code>html explainFile</code>. To further simplify trackDb,
     if there is a file, <code>nameOfTrack.html</code>, in the same directory as the
     trackDb matching the name of the track, <code>track nameOfTrack</code>,
     then the html file does not need to be declared.
+    <p>To help users understand Public Hub data, we request you provide
+    a web page that explains what your Track Hub is presenting.
+    Adding an html page for your Track Hub is also useful to instruct people 
+    on how to cite your data.</p>
     <p>To be consistent with standard Genome Browser track descriptions, html for tracks
     should contain several sections as seen below. Here is a link to an 
     <a href="../examples/hubExamples/templatePage.html" 
@@ -666,6 +668,14 @@
     <P>This example sets the second assembly in the alignment to the mouse mm10 assembly.</P>
 </DIV>
 
+<DIV class="otherTwoBitUrl"><span class="types chain bigChain psl bigPsl"></span>
+<div class="format"><code>otherTwoBitUrl &lt;url/relativePath&gt;</code></div>
+    <P>For pairwise alignment tracks this can specify where to find the query sequence
+    This setting can be used in psl, bigPsl, chain, and bigChain tracks.</P>
+    <P><B>Example:</B></P>
+    <pre>   otherTwoBitUrl https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit</pre>
+</DIV>
+
 <DIV class="origAssembly"><span class="types all"></span>
 <div class="format"><code>origAssembly &lt;db&gt;</code></div>
     <P><I>NOT FOR HUBS.</I></P>
@@ -885,17 +895,20 @@
     bigBed fields as explained in example 3 of the <a href="/goldenPath/help/bigBed.html#Ex3">bigBed documentation</a>.
     The field names from your .as file are the field names referenced in this statement.
     The urls in this statement support the same wildcards as the <A
-    onclick="jumpTo(this)" HREF="#">url</A> statement.  Make sure to enclose
+    onclick="jumpTo(this)" href="#url">url</a> statement.  Make sure to enclose
     the URLs in double quotes.  The default label for the identifier is the field
     description in the .as file (all text after the # mark). 
     </P> 
-    <P>
-    If the field contains a "|" symbol, the part before the symbol is used to
-    replace the $$ wildcard and the part after it as the label. This is similar
-    to how Wikipedia markup encodes links. In the example below, a value for the
-    field pmid of "115330|Doe, J. et al" would create a link with the URL
-    https://www.ncbi.nlm.nih.gov/pubmed/115330 and the label "Doe, J. et al" .
-    </P>
+    <p>The field can contain multiple values, separated by a comma "," where multiple links
+    will then be created on each item. For instance, a &quot;pmid&quot; field with an
+    entry &quot;11932250,34718705&quot; would create two links.</p>
+    <p>
+    If an entry of comma-separated values contains a &quot;|&quot; symbol, the part before the
+    pipe symbol is used to replace the $$ wildcard and the part after it is used as the label,
+    as opposed to the default label description in the .as file. This pipe substitution
+    is similar to how Wikipedia markup encodes links. In the example below, a value for the
+    field pmid of &quot;11932250|W James Kent&quot; would create a link with the URL
+    https://www.ncbi.nlm.nih.gov/pubmed/11932250 and the label &quot;W James Kent&quot;.</p>
 
     <P><B>Example:</B></P>
     <pre>
@@ -1213,7 +1226,7 @@ There are no extra options that can appear on the type hic line.
 
 <DIV class="bigDataUrl2"><span class="types bigBed bigWig bam vcfTabix"></span>
 <div class="format">
-    <code>bigDataUrl &lt;url/relativePath&gt;</code></div>
+    <code>bigDataUrl2 &lt;url/relativePath&gt;</code></div>
     <P>This setting is for remote data file type
     tracks (e.g. bigWig) and is fully described in the "<A HREF="#bigDataUrl">Common
     trackDb settings</A>" portion of this document.</P>
@@ -1873,7 +1886,7 @@ There are no extra options that can appear on the type hic line.
 <div class="format"><code>maxWindowCoverage &lt;integer&gt;</code></div>
     <p>When too many individual bed items might be shown in the Browser image
     (such as might occur when a large region of a chromosome is viewed),
-    <code>maxWindowCoverage</code> will switch the track into density covergage plot when
+    <code>maxWindowCoverage</code> will switch the track into density coverage plot when
     the window contains more than the specified number of bases.</p>
     <P><B>Example:</B></P>
     <pre>   maxWindowCoverage 10000000</pre>
@@ -2125,9 +2138,8 @@ There are no extra options that can appear on the type hic line.
 </DIV>
 
 <DIV class="baseColorUseSequence"><span class="types all"></span>
-<div class="format"><I>Related settings:</I><BR>
-    <code>baseColorUseSequence &lt; &lt;extFile {seqTable} &lt;extFile&gt; /
-                        hgPcrResult / lfExtra / nameIsSequence / seq1Seq2 / ss &gt;</code></div>
+<div class="format"><code>baseColorUseSequence  &lt;extFile {seqTable} /
+                  hgPcrResult / lfExtra / nameIsSequence / seq1Seq2 / ss / 2bit &gt;</code></div>
     <!-- DONNA -- redo -->
     <P>Specifies where
     item sequence can be found (if any) so that item sequence, or
@@ -2156,6 +2168,8 @@ There are no extra options that can appear on the type hic line.
     hg/lib/encode/pairedTagAlign.as)</LI>
     <LI>If <code>ss</code> is specified then a
     user-provided blat sequence is looked for.</LI>
+    <LI>If <code>2bit</code> is specified then looks for sequence in the file specified
+    by the <code>otherTwoBitUrl</code> tag.
     </UL>
 </DIV>
 
@@ -2625,7 +2639,7 @@ There are no extra options that can appear on the type hic line.
     <P>The signal can be graphed as reference base nucleotide letters with their heights equal to the
     signal value within the bigWig track. If not sufficiently zoomed in, the bigWig will
     revert to bars instead of letters by default. See a working example of the <code>logo</code>
-    dynseq display on the <a href="../bigWig.html#Ex4" target="_blank">bigWig<a> help page.</p>
+    dynseq display on the <a href="../bigWig.html#Ex4" target="_blank">bigWig</a> help page.</p>
     <P><B>Example:</B></P>
     <pre>   logo on</pre>
 </DIV>
@@ -3996,6 +4010,7 @@ There are no extra options that can appear on the type hic line.
 
 <DIV class="extraDetailsTable"><span class="types bigBed"></span>
 <div class="format"><code>extraDetailsTable &lt;url/relativePath&gt;</code></div>
+    <p>This setting was renamed June 2022. Please use <a href="#detailsStaticTable">detailsStaticTable</a> instead.</p>
     <p>
     Provides a template to a tab separated text file where $&lt;fieldName&gt;
     strings will be substituted for data in the bigBed and displayed as an HTML
@@ -4007,12 +4022,13 @@ There are no extra options that can appear on the type hic line.
     <p>
     Note that the same size table is displayed for every item of the bigBed, even
     if there is missing data in that field for a particular item. For variable
-    size tables, please see <a href="#extraTableFields">extraTableFields</a>.
+    size tables, please see <a href="#detailsDynamicTable">detailsDynamicTable</a>.
     </p>
 </DIV>
 
 <DIV class="extraTableFields"><span class="types bigBed"></span>
 <div class="format"><code>extraTableFields &lt;fieldName1|table title,fieldName2|table title,...&gt;</code></div>
+    <p>This setting was renamed June 2022. Please use <a href="#detailsDynamicTable">detailsDynamicTable</a> instead.</p>
     <p>
     Tells the system that the data in &lt;fieldName1,...&gt; contains an <em>encoded</em> table
     that should be turned into a standard HTML table on the details page for that item. If
@@ -4029,6 +4045,89 @@ There are no extra options that can appear on the type hic line.
     <br>
     trackDb line:
     <pre>extraTableFields _jsonField1|JSON Title Example,tableField2|NON-JSON Title Example</pre>
+    the two columns from the bigBed (or external file):<br>
+    <pre>_jsonField1	tableField2
+{key:val, key1: val1, key2: val2}	key|val;key1|val1;key2|val2
+    </pre>
+    And when clicking on an item in the browser, the following would be displayed:<br>
+    <table class='bedExtraTbl'>
+        <tr><td>JSON Title Example</td><td>
+            <table class='bedExtraTbl'>
+                <tr><td>key</td><td>val</td>
+                <tr><td>key1</td><td>val1</td>
+                <tr><td>key2</td><td>val2</td>
+            </table></td></tr>
+        <tr><td>NON-JSON Title Example</td><td>
+            <table class='bedExtraTbl'>
+                <tr><td>key</td><td>val</td>
+                <tr><td>key1</td><td>val1</td>
+                <tr><td>key2</td><td>val2</td>
+            </table></td></tr>
+    </table>
+    Note that the number of columns and rows is variable per item, meaning some items
+    can have different sized tables than other items, contrasting with the extraDetailsTable
+    statement, which enforces the same table size per item. For instance, in the above
+    example, a 3 rows by 2 columns table is created for each field, but if our JSON was
+    instead:
+<pre>{"transcript1": {annot1: val1, annot2: val2}, "transcript2": {annot3: val3}}</pre>
+    then the following nested table would be shown on the details page:
+    <table class='bedExtraTbl'>
+        <tr><td>JSON Title Example</td><td>
+            <table class='jsonTable'>
+                <tr>
+                  <td>transcript1</td><td>
+                    <table class='jsonTable'>
+                        <tr><td>annot1</td><td>val1</td></tr>
+                        <tr><td>annot2</td><td>val2</td></tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>transcript2</td><td>
+                    <table class='jsonTable'>
+                        <tr><td>annot3</td><td>val3</td></tr>
+                    </table>
+                  </td>
+                </tr>
+            </table></td></tr>
+    </table>
+    </p>
+</DIV>
+<DIV class="detailsStaticTable"><span class="types bigBed"></span>
+<div class="format"><code>detailsStaticTable &lt;url/relativePath&gt;</code></div>
+    <p>
+    Provides a template to a tab separated text file where $&lt;fieldName&gt;
+    strings will be substituted for data in the bigBed and displayed as an HTML
+    table. For an example of this, please see the following text file:
+    <a href="http://hgdownload.soe.ucsc.edu/gbdb/hg38/gnomAD/v3.1/variants/v3.1.genomes.popTable.txt">http://hgdownload.soe.ucsc.edu/gbdb/hg38/gnomAD/v3.1/variants/v3.1.genomes.popTable.txt</a>, where
+    the strings such as &quot;${AC_afr}&quot; will be substituted for the data in that
+    field for the particular item from the bigBed.
+    </p>
+    <p>
+    Note that the same size table is displayed for every item of the bigBed, even
+    if there is missing data in that field for a particular item. For variable
+    size tables, please see <a href="#detailsDynamicTable">detailsDynamicTable</a>.
+    </p>
+</DIV>
+
+<DIV class="detailsDynamicTable"><span class="types bigBed"></span>
+<div class="format"><code>detailsDynamicTable &lt;fieldName1|table title,fieldName2|table title,...&gt;</code></div>
+    <p>
+    Tells the system that the data in &lt;fieldName1,...&gt; contains an <em>encoded</em> table
+    that should be turned into a standard HTML table on the details page for that item. If
+    the &lt;fieldName&gt; starts with &quot;_json&quot; or &quot;json&quot;, then the system
+    expects the data in &lt;fieldName&gt; to be valid JSON. If the field name starts with
+    anything else, then the table is formatted using &quot;|&quot; and &quot;;&quot; as field
+    and new row separators. The &quot;table title&quot; part of the statment is optional, if
+    present it will be used as the title for the table, if not, then the title will be taken
+    from the autoSql description of the field name, or if there is no autoSql because the data
+    is from an external file, then the field name will be used.
+
+    <p>An example of both formats is shown below, along with the
+    corresponding trackDb statements:<br>
+    <br>
+    trackDb line:
+    <pre>detailsDynamicTable _jsonField1|JSON Title Example,tableField2|NON-JSON Title Example</pre>
     the two columns from the bigBed (or external file):<br>
     <pre>_jsonField1	tableField2
 {key:val, key1: val1, key2: val2}	key|val;key1|val1;key2|val2

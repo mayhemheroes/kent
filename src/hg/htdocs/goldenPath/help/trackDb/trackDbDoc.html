@@ -238,6 +238,9 @@ used as a ready reference.</P>
     <TR VALIGN=TOP><TD class="otherDb"><A name="otherDb"></A><IMG class='toggle detail'>
         <div class="format"><code>otherDb &lt;otherDb&gt;</code></div>
     </TD></TR>
+    <TR VALIGN=TOP><TD class="otherTwoBitUrl"><A name="otherTwoBitUrl"></A><IMG class='toggle detail'>
+        <div class="format"><code>otherTwoBitUrl &lt;url/relativePath&gt;</code></div>
+    </TD></TR>
     <TR VALIGN=TOP><TD class="origAssembly"><A name="origAssembly"></A><IMG class='toggle detail'>
         <div class="format"><code>origAssembly &lt;db&gt;</code></div>
     </TD></TR>
@@ -359,11 +362,19 @@ are described below along with the settings specific to their types.</P>
         <div class="format"><code>labelOnFeature &lt;on/off&gt;</code></div>
     </TD></TR>
     <tr valign=top><td class="extraDetailsTable"><a name="extraDetailsTable"></a><img class='toggle detail'>
-        <div class="format"><code class="level-new">extraDetailsTable &lt;url/relativePath&gt;</code>
+        <div class="format"><code class="level-deprecated">extraDetailsTable &lt;url/relativePath&gt;</code>
         </div>
     </td></tr>
     <tr valign=top><td class="extraTableFields"><a name="extraTableFields"></a><img class='toggle detail'>
-        <div class="format"><code class="level-new">extraTableFields &lt;fieldName1|table title,fieldName2|table title,...&gt;</code>
+        <div class="format"><code class="level-deprecated">extraTableFields &lt;fieldName1|table title,fieldName2|table title,...&gt;</code>
+        </div>
+    </td></tr>
+    <tr valign=top><td class="detailsStaticTable"><a name="detailsStaticTable"></a><img class='toggle detail'>
+        <div class="format"><code class="level-new">detailsStaticTable &lt;url/relativePath&gt;</code>
+        </div>
+    </td></tr>
+    <tr valign=top><td class="detailsDynamicTable"><a name="detailsDynamicTable"></a><img class='toggle detail'>
+        <div class="format"><code class="level-new">detailsDynamicTable &lt;fieldName1|table title,fieldName2|table title,...&gt;</code>
         </div>
     </td></tr>
     <TR VALIGN=TOP><TD class="exonArrows"><A name="exonArrows"></A><IMG class='toggle detail'>
@@ -471,8 +482,8 @@ are described below along with the settings specific to their types.</P>
     <TR class="related1st" VALIGN=TOP><TD class="baseColorUseSequence">
         <A name="baseColorUseSequence"></A><IMG class='toggle detail setB'>
         <div class="format"><I>Related settings:</I><BR>
-            <code>baseColorUseSequence &lt; &lt;extFile {seqTable} &lt;extFile&gt; /
-                        hgPcrResult / lfExtra / nameIsSequence / seq1Seq2 / ss &gt;</code></div>
+            <code>baseColorUseSequence &lt;extFile {seqTable} &lt;extFile&gt; /
+		    hgPcrResult / lfExtra / nameIsSequence / seq1Seq2 / ss / 2bit&gt;</code></div>
     </TD></TR>
     <TR class="related" VALIGN=TOP><TD class="baseColorUseCds">
         <A name="baseColorUseCds"></A><IMG class='toggle detail setB'>
@@ -1282,8 +1293,25 @@ are described below along with the settings specific to their types.</P>
             <code>$matrix</code> token in html.</div>
         </DIV>
     </TD></TR>
+    <TR VALIGN=TOP><TD class="otherTwoBitUrl"><A name="otherTwoBitUrl"></A><IMG class='toggle detail'>
+        <div class="format"><code>otherTwoBitUrl &lt;url/relativePath&gt;</code></div>
+    </TD></TR>
     <TR VALIGN=TOP><TD class="spectrum"><IMG class='toggle detail'>
         <div class="format"><code>spectrum on</code></div>
+    </TD></TR>
+    <TR class="related" VALIGN=TOP><TD class="baseColorDefault">
+        <A name="baseColorDefault"></A><IMG class='toggle detail setB'>
+        <div class="format"><code>baseColorDefault
+                        &lt;diffBases/diffCodons/itemBases/itemCodons/genomicCodons&gt;</code></div>
+    </TD></TR>
+    <TR VALIGN=TOP><TD class="indelDoubleInsert">
+            <A name="indelDoubleInsert"></A>
+            <A name="indelQueryInsert"></A>
+            <A name="indelPolyA"></A><IMG class='toggle detail'>
+        <div class="format">
+            <code>indelDoubleInsert &lt;off/on&gt;</code><BR>
+            <code>indelQueryInsert &lt;off/on&gt;</code><BR>
+            <code>indelPolyA &lt;off/on&gt;</code></div>
     </TD></TR>
     <!-- <TR VALIGN=TOP><TD>
             <P>Additional settings

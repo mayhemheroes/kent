@@ -18,14 +18,27 @@ export host=$1
 export orderList=$2
 export successCount=0
 export doneCount=0
+export fileName=`basename $orderList`
+export subset=${fileName%.orderList.tsv}
 
 export minTrackCount=12
+if [ "${subset}" == "invertebrate" ]; then
+  minTrackCount=10
+elif [ "${subset}" == "mammals" ]; then
+  minTrackCount=9
+elif [ "${subset}" == "viral" ]; then
+  minTrackCount=7
+fi
+
+# printf "# DBG subset '%s' min: %d\n" "${subset}" "${minTrackCount}" 1>&2
 
 export dbHost="localhost"
 export hubSource="hgdownload-test.gi.ucsc.edu"
 if [ "${host}" = "apibeta.soe.ucsc.edu" ]; then
   hubSource="hgdownload.soe.ucsc.edu"
 fi
+
+export totalTrackCount=0
 
 for dirPath in `~/kent/src/hg/makeDb/doc/asmHubs/mkSendList.pl "${orderList}"`
 do
@@ -44,6 +57,7 @@ do
   else
     printf "%03d\t%s\t%d (error <= %d) tracks:\t" "${doneCount}" "${genome}" "${trackCount}" "${minTrackCount}"
   fi
+  totalTrackCount=`echo $totalTrackCount $trackCount | awk '{print $1+$2}'`
   curl -L "https://$host/list/hubGenomes?hubUrl=https://$hubSource/hubs/${dirPath}/hub.txt" 2> /dev/null \
      | python -mjson.tool | egrep "organism\":|description\":" | sed -e "s/'/_/g;" \
        | tr -d '"'  | xargs echo \
@@ -61,10 +75,11 @@ do
   else
     printf "%03d\t%s\t%d (error < %d) tracks:\t" "${doneCount}" "${db}" "${trackCount}" "${minTrackCount}"
   fi
+  totalTrackCount=`echo $totalTrackCount $trackCount | awk '{print $1+$2}'`
 hgsql -N -e "select organism,description,\",\",scientificName from dbDb where name=\"$db\";" hgcentraltest | tr "'" '_' | xargs echo | sed -e 's/ ,/,/;'
        ;;
   esac
 
 done
 export failCount=`echo $doneCount $successCount | awk '{printf "%d", $1-$2}'`
-printf "# checked %3d hubs, %3d success, %3d fail\n" "${doneCount}" "${successCount}" "${failCount}"
+printf "# checked %3d hubs, %3d success, %3d fail, total tracks: %d\n" "${doneCount}" "${successCount}" "${failCount}" "${totalTrackCount}"

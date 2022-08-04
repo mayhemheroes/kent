@@ -52,6 +52,163 @@
 <!-- ============= 2022 archived news ============= -->
 <a name="2022"></a>
 
+<a name="080222"></a>
+<h2>Aug. 08, 2022 &nbsp;&nbsp; New GENCODE gene tracks: Human V41 (hg19/hg38) - Mouse VM30
+(mm39)</h2>
+<p>
+We are pleased to announce new GENCODE Gene annotation tracks, which correspond
+to <a href="https://www.ensembl.info/2022/05/31/whats-coming-in-ensembl-release-107-ensembl-genomes-54/"
+target="_blank">Ensembl 107</a>, for three assemblies: <a target="_blank"
+href="/cgi-bin/hgTrackUi?db=hg19&c=chrX&g=wgEncodeGencodeV41lift37">hg19/GRCh37</a>,
+<a target="_blank" href="/cgi-bin/hgTrackUi?db=hg38&c=chrX&g=wgEncodeGencodeV41">hg38/GRCh38</a>,
+and
+<a target="_blank" href="/cgi-bin/hgTrackUi?db=mm39&c=chr12&g=wgEncodeGencodeVM30">mm39/GRCm39</a>.
+For human, the GENCODE V41 annotations were mapped to hg38/GRCh38 and then back-mapped
+to the hg19/GRCh37 assembly. For all three assemblies, the gene sets contain the following
+tracks:</p>
+<ul>
+  <li>
+      Basic - a subset of the <em>Comprehensive set</em>.</li>
+  <li>
+      Comprehensive - all GENCODE coding and non-coding transcript annotations, including
+      polymorphic pseudogenes. This includes both manual and automatic annotations.</li>
+  <li>
+      Pseudogenes - all annotations except polymorphic pseudogenes.</li>
+</ul>
+<p>
+The hg38 and mm39 assemblies also include the following tracks that are not available on hg19:
+</p>
+<ul>
+  <li>
+      2-way Pseudogenes - pseudogenes predicted by both the Yale Pseudopipe and UCSC
+      Retrofinder pipelines.</li>
+  <li>
+      PolyA - polyA signals and sites manually annotated on the genome based on transcribed
+      evidence (ESTs and cDNAs) of 3' end of transcripts containing at least 3 A's not matching the
+      genome.</li>
+</ul>
+<p>
+Details on each release can be found on the <a target="_blank"
+href="https://www.gencodegenes.org/">GENCODE site</a>. This includes <a target="_blank"
+href="https://www.gencodegenes.org/human/stats.html">statistics on each release</a>.
+</p>
+<p>
+We would like to thank the <a target="_blank"
+href="https://www.gencodegenes.org/pages/gencode.html">GENCODE project</a> for providing these
+annotations. We would also like to thank Mark Diekhans and Jairo Navarro for the development and
+release of these tracks.</p>
+
+<a name="071222"></a>
+<h2>July 12, 2022 &nbsp;&nbsp; GENCODE V41 and VM30 now available for human and mouse</h2>
+<p>
+We are happy to announce the release of the
+<a href="/cgi-bin/hgTrackUi?db=hg38&c=chrX&g=knownGene">GENCODE V41</a> track for human
+(GRCh38/hg38) and the
+<a href="/cgi-bin/hgTrackUi?db=mm39&c=chr12&g=knownGene">GENCODE VM30</a> track for mouse
+(GRCm39/mm39). These tracks includes protein-coding genes, non-coding RNA genes, and pseudo-genes,
+though pseudo-genes are not displayed by default. Gene annotations are available on the reference
+chromosomes, assembly patches, and alternative loci (haplotypes).
+</p>
+<p>
+Details on each release can be found on the <a target="_blank"
+href="https://www.gencodegenes.org/">GENCODE website</a>. This includes statistics on the
+<a target="_blank" href="https://www.gencodegenes.org/human/stats_41.html">human</a> and
+<a target="_blank" href="https://www.gencodegenes.org/mouse/stats_M30.html">mouse</a> release.
+<p>
+We would like to thank the <a target="_blank"
+href="https://www.gencodegenes.org/pages/gencode.html">GENCODE project</a> for providing these
+annotations. We would also like to thank Mark Diekhans, Brian Raney, and Jairo Navarro for the
+development and release of these tracks.</p>
+
+<a name="063022"></a>
+<h2>June 30, 2022 &nbsp;&nbsp; New gnomAD Constraint Metrics track on GRCh38/hg38</h2>
+<p>
+We are pleased to announce the <a href="/cgi-bin/hgTrackUi?db=hg38&g=gnomadPLI">Genome
+Aggregation Database (gnomAD) Constraint Metrics</a> track, previously only on hg19,
+is now also available on the human GRCh38/hg38 genome assembly.</p>
+<p>
+These data show various metrics of pathogenicity per-gene as predicted for gnomAD v2.1.1 and
+identifies genes subject to strong selection against various classes of mutation. It is comprised
+of four subtracks:</p>
+<ul>
+  <li><b>Gene LoF</b> &ndash; gnomAD Predicted Loss of Function Constraint Metrics By Gene (pLI)
+  <li><b>Gene Missense</b> &ndash; gnomAD Predicted Missense Constraint Metrics By Gene (Z-scores)
+  <li><b>Transcript LoF</b> &ndash; gnomAD Predicted Loss of Function Constraint Metrics By Transcript (pLI)
+  <li><b>Transcript Missense</b> &ndash; gnomAD Predicted Missense Constraint Metrics By Transcript (Z-scores)
+</ul>
+<p>
+More information on this track can be found in the <a href="/cgi-bin/hgTrackUi?db=hg38&g=gnomadPLI#TRACK_HTML"
+>track description page</a>, as well as the <a href="https://gnomad.broadinstitute.org/faq" target="_blank">
+gnomAD</a> site. We would like to thank the <a href="https://gnomad.broadinstitute.org/" target="_blank">
+Genome Aggregation Database Consortium</a> for making these data available. We would also like to thank Lou
+Nassar, Maximilian Haeussler, Anna Benet-Pages, and Gerardo Perez for their work in creating and releasing these
+tracks.</p>
+
+<a name="062822"></a>
+<h2>June 28, 2022 &nbsp;&nbsp; Update to GTEx cis-eQTL for hg38</h2>
+<p>
+We are happy to announce an update to the
+<a href="/cgi-bin/hgTrackUi?db=hg38&c=chrX&g=gtexEqtlHighConf">GTEx cis-eQTL</a> track for the human
+assembly (GRCh38/hg38). The track shows genetic variants likely affecting proximal gene expression
+in 49 human tissues from the <a href="https://gtexportal.org/home/"
+target="_blank">Genotype-Tissue Expression (GTEx)</a> V8 data release. With this update, we are
+introducing the <a href="https://github.com/xqwen/dap" target="_blank">DAP-G</a> 95% credible set
+alongside the <a href="http://genetics.cs.ucla.edu/caviar/" target="_blank">CAVIAR</a>
+high-confidence set.</p>
+<p>
+Hovering over items in the track display will show the variant ID (often a dbSNP rsID), the target
+gene, tissue, and posterior probablity (Causal Posterior Probability (CPP) for CAVIAR; SNP Posterior
+Inclusion Probability (PIP) for DAP-G). Clicking an item will show the details of that interaction
+with link outs to view more details on the GTEx website.</p>
+<p>
+Track configuration supports filtering by tissue, gene, or posterior probability.</p>
+<p>
+We would like to thank the GTEx investigators, analysts, and portal team for providing this data.
+We also want to thank Matt Speir, Max Haeussler, and Jairo Navarro for the creation and release of
+these tracks.</p>
+
+<a name="062722"></a>
+<h2>June 27, 2022 &nbsp;&nbsp; New dynseq &quot;logo on&quot; display for bigWigs</h2>
+<p>
+There is a new <a href="help/bigWig.html#Ex4" target="_blank"><code>logo=on</code></a>
+setting for bigWig custom tracks that allows dynamically displaying
+sequence at the base level. This <a href="https://kundajelab.github.io/dynseq-pages/"
+target="_blank">dynseq</a> display scales nucleotide characters by user-specified,
+base-resolution scores. The dynseq feature was developed by the <a target="_blank"
+href="https://kundajelab.github.io/about/">Kundaje Lab</a>.</p>
+<div class="text-center">
+ <a href="help/bigWig.html#Ex4">
+ <img src="../../images/dynseq.png" alt="Example4 of dynseq logo=on setting" width="700">
+ </a>
+</div>
+<p>
+See <a href="help/bigWig.html#Ex4" target="_blank">an example</a> on the bigWig help page
+or read about the <a href="help/trackDb/trackDbHub.html#logo"
+target="_blank"><code>logo on</code></a> feature for Track Hubs.</p>
+
+<a name="060322"></a>
+<h2>June 3, 2022 &nbsp;&nbsp; New clinical data track on hg19/hg38: GenCC</h2>
+<p>
+We are happy to add the GenCC clinical track to the human genome assemblies hg19(GRCh37) 
+and hg38(GRCh38). This data set is from the <a target="_blank" href="https://thegencc.org/">
+Gene Curation Coalition</a> and contains a list of gene-disease relationships and data.
+This global coalition harmonizes gene-level resources with disease associations.  
+Visually, the browser tracks are filterable and color classified by evidence validity, from red to green.
+You can find this track listed under the Phenotype and Literature group. Click on the session
+below to see GenCC alongside select clinical tracks. </p>
+<ul>
+<li><a href="https://genome.ucsc.edu/s/view/GenCC.selectedClinical">
+https://genome.ucsc.edu/s/view/GenCC.selectedClinical</a></li>
+</ul>
+<p>
+You can read more and visualize this data youself on the Genome Browser from the link below:</p>
+<ul>
+<li><a href="../../cgi-bin/hgTrackUi?db=hg38&g=genCC">GenCC on hg38</a></li>
+<li><a href="../../cgi-bin/hgTrackUi?db=hg19&g=genCC">GenCC on hg19</a></li>
+</ul>
+
+
+
 <a name="052422"></a>
 <h2>May 24, 2022 &nbsp;&nbsp; New Assembly Request Page</h2>
 <p>
@@ -68,8 +225,8 @@ or the &quot;request&quot; button to request that we add yours.</p>
 target="_blank">GenArk Hubs Part 4 - New assembly request page</a> describes how to use this new
 feature.</p>
 <p>
-With the realization that we could not possibly host every single genomic assembly available,
-we created <a href="help/hgTrackHubHelp.html#Assembly">Assembly Hubs</a>. Assembly Hubs allow
+With the realization that we could not possibly host every single genomic assembly available, we created
+<a href="help/hgTrackHubHelp.html#Assembly" target="_blank">Assembly Hubs</a>. Assembly Hubs allow
 anyone to host and view the genome of any species in the context of the UCSC Genome Browser.
 Last summer we <a href="newsarch.html#060121">announced</a> the creation of the Genome Archive
 (GenArk) which included Assembly Hubs for the genomic assemblies of more than 1,300 species.
@@ -281,7 +438,7 @@ downloaded on the <a href="https://remap.univ-amu.fr/download_page"
 target="_blank">ReMap website</a>.
 </p>
 <p>
-The below image shows the ReMap ChIP-seq Track, where a right-click can bring up the configuration
+The image below shows the ReMap ChIP-seq Track, where a right-click can bring up the configuration
 option.  Then there are filters available using either regular expression (regexp) or wildcards.
 In the image <code>.*A\|B\|F.*</code> is using regexp, which will select all Transcriptional
 regulators that include either the letter A, B, or F, while a separate wildcard filter on the

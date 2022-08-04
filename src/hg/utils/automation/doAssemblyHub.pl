@@ -1274,7 +1274,15 @@ if [ \$buildDir/\$asmId.2bit -nt trfMask.bed.gz ]; then
     -continue=cleanup -stop=cleanup -unmaskedSeq=\$buildDir/\$asmId.2bit \\
       -trf409=6 -dbHost=$dbHost -smallClusterHub=$trfClusterHub \\
         -workhorse=$workhorse \$asmId
-  gzip simpleRepeat.bed trfMask.bed
+  if [ -s simpleRepeat.bed ]; then
+    gzip simpleRepeat.bed &
+  else
+    rm -f simpleRepeat.bed
+  fi
+  if [ -s trfMask.bed ]; then
+    gzip trfMask.bed &
+  fi
+  wait
 fi
 _EOF_
   );
@@ -1314,9 +1322,9 @@ if [ \$buildDir/\$asmId.2bit -nt \$asmId.allGaps.bb ]; then
     bedIntersect -minCoverage=0.0000000014 \$asmId.allGaps.bed \$asmId.gap.bed \\
       \$asmId.verify.annotated.gap.bed
     gapTrackCoverage=`awk '{print \$3-\$2}' \$asmId.gap.bed \\
-      | ave stdin | grep "^total" | sed -e 's/.000000//;'`
+      | ave stdin | grep "^total" | awk '{print \$NF}' | sed -e 's/.000000//;'`
     intersectCoverage=`ave -col=5 \$asmId.verify.annotated.gap.bed \\
-      | grep "^total" | sed -e 's/.000000//;'`
+      | grep "^total" | awk '{print \$NF}' | sed -e 's/.000000//;'`
     if [ \$gapTrackCoverage -ne \$intersectCoverage ]; then
       printf "ERROR: 'all' gaps does not include gap track coverage\\n" 1>&2
       printf "gapTrackCoverage: \$gapTrackCoverage != \$intersectCoverage intersection\\n" 1>&2
@@ -1331,9 +1339,9 @@ if [ \$buildDir/\$asmId.2bit -nt \$asmId.allGaps.bb ]; then
   #   sum of both sizes should equal genome size
   both=`cat \$asmId.NOT.allGaps.bed \$asmId.allGaps.bed \\
     | awk '{print \$3-\$2}' | ave stdin | grep "^total" \\
-    | sed -e 's/.000000//;'`
+      | awk '{print \$NF}' | sed -e 's/.000000//;'`
   genomeSize=`ave -col=2 ../../\$asmId.chrom.sizes | grep "^total" \\
-    | sed -e 's/.000000//;'`
+    | awk '{print \$NF}' | sed -e 's/.000000//;'`
   if [ \$genomeSize -ne \$both ]; then
      printf "ERROR: bedInvert.pl did not function correctly on allGaps.bed\n" 1>&2
      printf "genomeSize: \$genomeSize != \$both both gaps data\n" 1>&2
@@ -1344,7 +1352,7 @@ if [ \$buildDir/\$asmId.2bit -nt \$asmId.allGaps.bb ]; then
   # again, verify bedInvert is working correctly, sum of both == genomeSize
   both=`cat \$asmId.NOT.gap.bed \$asmId.gap.bed \\
     | awk '{print \$3-\$2}' | ave stdin | grep "^total" \\
-    | sed -e 's/.000000//;'`
+      | awk '{print \$NF}' | sed -e 's/.000000//;'`
   if [ \$genomeSize -ne \$both ]; then
      printf "ERROR: bedInvert did not function correctly on gap.bed\n" 1>&2
      printf "genomeSize: \$genomeSize != \$both both gaps data\n" 1>&2
@@ -1355,9 +1363,9 @@ if [ \$buildDir/\$asmId.2bit -nt \$asmId.allGaps.bb ]; then
   # verify the intersect functioned correctly
   # sum of new gaps plus gap track should equal all gaps
   allGapCoverage=`awk '{print \$3-\$2}' \$asmId.allGaps.bed \\
-     | ave stdin | grep "^total" | sed -e 's/.000000//;'`
+     | ave stdin | grep "^total" | awk '{print \$NF}' | sed -e 's/.000000//;'`
   both=`cat \$asmId.notAnnotated.gap.bed \$asmId.gap.bed \\
-    | awk '{print \$3-\$2}' | ave stdin | grep "^total" | sed -e 's/.000000//;'`
+    | awk '{print \$3-\$2}' | ave stdin | grep "^total" | awk '{print \$NF}' | sed -e 's/.000000//;'`
   if [ \$allGapCoverage -ne \$both ]; then
      printf "ERROR: bedIntersect to identify new gaps did not function correctly\n" 1>&2
      printf "allGaps: \$allGapCoverage != \$both (new + gap track)\n" 1>&2
@@ -1427,9 +1435,9 @@ sub doAddMask {
       printf STDERR "can not find: $buildDir/trackData/windowMasker/$asmId.cleanWMSdust.2bit\n";
       $goNoGo = 1;
   }
-  if ( ! -s "$buildDir/trackData/simpleRepeat/trfMask.bed.gz" ) {
+  if ( ! -s "$buildDir/trackData/simpleRepeat/doCleanup.csh" ) {
       printf STDERR "ERROR: simpleRepeat step not completed\n";
-      printf STDERR "can not find: $buildDir/trackData/simpleRepeat/trfMask.bed.gz\n";
+      printf STDERR "can not find: $buildDir/trackData/simpleRepeat/doCleanup.csh\n";
       $goNoGo = 1;
   }
   if ($goNoGo) {
@@ -1455,11 +1463,20 @@ sub doAddMask {
 
   $bossScript->add(<<_EOF_
 export asmId=$asmId
+export src2Bit=$src2BitToMask
 export accessionId=`echo \$asmId | cut -d'_' -f1-2`
 
-if [ ../simpleRepeat/trfMask.bed.gz -nt \$asmId.masked.faSize.txt ]; then
-  twoBitMask $src2BitToMask -type=.bed \\
-     -add ../simpleRepeat/trfMask.bed.gz \$asmId.masked.2bit
+# if simple repeat has a result, add it, otherwise no add
+if [ -s ../simpleRepeat/trfMask.bed.gz ]; then
+  if [ ../simpleRepeat/trfMask.bed.gz -nt \$asmId.masked.faSize.txt ]; then
+    twoBitMask \$src2Bit -type=.bed \\
+       -add ../simpleRepeat/trfMask.bed.gz \$asmId.masked.2bit
+  fi
+else
+  cp -p \$src2Bit \$asmId.masked.2bit
+fi
+
+if [ \$asmId.masked.2bit -nt \$asmId.masked.faSize.txt ]; then
   twoBitToFa \$asmId.masked.2bit stdout | faSize stdin > \$asmId.masked.faSize.txt
   touch -r \$asmId.masked.2bit \$asmId.masked.faSize.txt
   bptForTwoBit \$asmId.masked.2bit \$asmId.masked.2bit.bpt
@@ -1505,7 +1522,6 @@ sub doWindowMasker {
   $bossScript->add(<<_EOF_
 export asmId=$asmId
 
-### if [ ../../\$asmId.unmasked.2bit -nt fb.\$asmId.rmsk.windowmaskerSdust.txt ]; then
 if [ ../../\$asmId.unmasked.2bit -nt faSize.\$asmId.cleanWMSdust.txt ]; then
   \$HOME/kent/src/hg/utils/automation/doWindowMasker.pl -stop=twobit -buildDir=`pwd` -dbHost=$dbHost \\
     -workhorse=$workhorse -unmaskedSeq=$buildDir/\$asmId.unmasked.2bit \$asmId
@@ -1517,15 +1533,23 @@ if [ ../../\$asmId.unmasked.2bit -nt faSize.\$asmId.cleanWMSdust.txt ]; then
     \$asmId.cleanWMSdust.2bit
   twoBitToFa \$asmId.cleanWMSdust.2bit stdout \\
     | faSize stdin > faSize.\$asmId.cleanWMSdust.txt
+  export intersectRmskWM=0
   if [ -s ../repeatMasker/\$asmId.sorted.fa.out.gz ]; then
     zcat ../repeatMasker/\$asmId.sorted.fa.out.gz | sed -e 's/^  *//; /^\$/d;' \\
-      | egrep -v "^SW|^score" | awk '{printf "%s\\t%d\\t%d\\n", \$5, \$6-1, \$7}' \\
+      | (egrep -v "^SW|^score" || true) | awk '{printf "%s\\t%d\\t%d\\n", \$5, \$6-1, \$7}' \\
         | bedSingleCover.pl stdin > rmsk.bed
-    intersectRmskWM=`bedIntersect -minCoverage=0.0000000014 cleanWMask.bed \\
-      rmsk.bed stdout | bedSingleCover.pl stdin | ave -col=4 stdin \\
-       | grep "^total" | awk '{print \$2}' | sed -e 's/.000000//;'`
-  else
-    intersectRmskWM=0
+    if [ -s rmsk.bed ]; then
+      anyOneHome=`bedIntersect -minCoverage=0.0000000014 cleanWMask.bed \\
+          rmsk.bed stdout | bedSingleCover.pl stdin | wc -l`
+      if [ \$anyOneHome -gt 0 ]; then
+       intersectRmskWM=`bedIntersect -minCoverage=0.0000000014 cleanWMask.bed \\
+          rmsk.bed stdout | bedSingleCover.pl stdin | ave -col=4 stdin \\
+           | grep "^total" | awk '{print \$2}' | sed -e 's/.000000//;'`
+       if [ "x\${intersectRmskWM}y" == "xy" ]; then
+         intersectRmskWM=0
+       fi
+      fi
+    fi
   fi
   chromSize=`ave -col=2 ../../\$asmId.chrom.sizes \\
      | grep "^total" | awk '{print \$2}' | sed -e 's/.000000//;'`

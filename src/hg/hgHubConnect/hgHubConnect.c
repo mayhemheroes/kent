@@ -121,11 +121,13 @@ return string;
 }
 
 #define GENLISTWIDTH 40
-static void printGenomeList(char *hubUrl, struct slName *genomes, int row, boolean withLink)
+static void printGenomeList(char *hubUrl, struct slName *genomes, int row, boolean withLink, boolean withPaste)
 /* print supported assembly names from sl list */
 {
-struct dyString *dyHtml = dyStringNew(1024);
+struct dyString *dyLongHtml = dyStringNew(1024);
 struct dyString *dyShortHtml = dyStringNew(1024);
+
+char *linkHtml = "<input type='hidden' value='%s'><svg title='click to copy genome browser hub connection URL to clipboard, for sharing with others' class='pasteIcon' style='margin-left: 6px; cursor: pointer; vertical-align:baseline; width:0.8em' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d='M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z'/></svg>";
 
 // create two strings: one shortened to GENLISTWIDTH characters
 // and another one with all genomes
@@ -143,29 +145,39 @@ for(; genome; genome = genome->next)
     if (charCount == 0 || (charCount+strlen(trimmedName)<=GENLISTWIDTH))
         { 
         if (withLink)
-            dyStringPrintf(dyShortHtml,"<a title='Connect hub and open the %s assembly' href='hgTracks?hubUrl=%s&genome=%s&position=lastDbPos'>%s</a>" , genome->name, hubUrl, genome->name, shortName);
+            {
+            dyStringPrintf(dyShortHtml,"<a class='hgTracksLink' title='Connect hub and open the %s assembly' href='hgTracks?hubUrl=%s&genome=%s&position=lastDbPos'>%s</a>" , genome->name, hubUrl, genome->name, shortName);
+            // https://hgdownload-test.gi.ucsc.edu/hubs/GCA/009/914/755/GCA_009914755.4/hub.txt
+            if (withPaste)
+                dyStringPrintf(dyShortHtml, linkHtml, hubUrl);
+            }
         else
             dyStringPrintf(dyShortHtml,"%s" , shortName);
+
         dyStringPrintf(dyShortHtml,", ");
         }
     freeMem(shortName); 
 
     charCount += strlen(trimmedName);
 
-    // always append to dyHtml
+    // always append to dyLongHtml
     if (withLink)
-        dyStringPrintf(dyHtml,"<a title='Connect hub and open the %s assembly' href='hgTracks?hubUrl=%s&genome=%s&position=lastDbPos'>%s</a>" , genome->name, hubUrl, genome->name, trimmedName);
+        {
+        dyStringPrintf(dyLongHtml,"<a title='Connect hub and open the %s assembly' href='hgTracks?hubUrl=%s&genome=%s&position=lastDbPos'>%s</a>" , genome->name, hubUrl, genome->name, trimmedName);
+        if (withPaste)
+            dyStringPrintf(dyLongHtml, linkHtml, hubUrl);
+        }
     else
-        dyStringPrintf(dyHtml,"%s" , trimmedName);
+        dyStringPrintf(dyLongHtml,"%s" , trimmedName);
 
     if (genome->next)
         {
-        dyStringPrintf(dyHtml,", ");
+        dyStringPrintf(dyLongHtml,", ");
         }
 
     }
 
-char *longHtml = dyStringCannibalize(&dyHtml);
+char *longHtml = dyStringCannibalize(&dyLongHtml);
 char *shortHtml = dyStringCannibalize(&dyShortHtml);
 shortHtml = removeLastComma(shortHtml);
 
@@ -173,27 +185,11 @@ if (charCount < GENLISTWIDTH)
     ourPrintCell(shortHtml);
 else
     {
-    char id[256];
     char tempHtml[1024+strlen(longHtml)+strlen(shortHtml)];
     safef(tempHtml, sizeof tempHtml, 
-	"<span id=Short%d><span style='cursor:default' id='Short%dPlus'>[+]&nbsp;</span>%s...</span>"
-	"<span id=Full%d style=\"display:none\"><span style='cursor:default' id='Full%dMinus'>[-]<br></span>%s</span>"
-	, row, row, shortHtml
-	, row, row, longHtml);
-
-    safef(id, sizeof id, "Short%dPlus", row);
-    jsOnEventByIdF("click", id,
-	"document.getElementById('Short%d').style.display='none';"
-	"document.getElementById('Full%d').style.display='inline';"
-	"return false;"
-	, row, row);
-
-    safef(id, sizeof id, "Full%dMinus", row);
-    jsOnEventByIdF("click", id, 
-	"document.getElementById('Full%d').style.display='none';"
-	"document.getElementById('Short%d').style.display='inline';"
-	"return false;"
-	, row, row);
+	"<span class='short'><span style='cursor:default' class='shortPlus'>[+]&nbsp;</span>%s...</span>"
+	"<span class='full' style=\"display:none\"><span style='cursor:default' class='fullMinus'>[-]<br></span>%s</span>",
+	shortHtml, longHtml);
     ourPrintCell(tempHtml);
     }
 
@@ -214,7 +210,7 @@ for(; genomes; genomes = genomes->next)
     slAddHead(&list, el);
     }
 slReverse(&list);
-printGenomeList(thub->url, list, row, withLink);
+printGenomeList(thub->url, list, row, withLink, TRUE);
 }
 
 
@@ -258,12 +254,11 @@ struct hubConnectStatus *hub, *nextHub;
 for(hub = hubList; hub; hub = nextHub)
     {
     nextHub = hub->next;
-    // if url is not in publicHash, it's unlisted */
-    if (!((publicHash != NULL) && hashLookup(publicHash, hub->hubUrl)))
-	{
-	unlistedHubCount++;
-	slAddHead(&unlistedHubList, hub);
-	}
+    if (!startsWith("/gbdb", hub->hubUrl))
+        {
+        unlistedHubCount++;
+        slAddHead(&unlistedHubList, hub);
+        }
     }
 
 hubList = NULL;  // hubList no longer valid
@@ -285,7 +280,14 @@ puts("<p>Enter hub URLs below to connect hubs. Hubs connected this way are not a
 if (unlistedHubCount == 0)
     {
     // nothing to see here
-    printf("<tr><td>No Unlisted Track Hubs</td></tr>");
+    printf("<tr><td style='text-align:left'>No connected track or assembly hubs.<p>To connect a hub:"
+            "<li>Enter its URL into the input box above and click 'Add Hub'. "
+            "<li>Alternatively, you can go to the 'Public Hubs' tab on this page and connect one "
+            "of the hubs that were submitted to us. "
+            "<li>Another way to connect to hubs is via a direct connection link copied using the copy icon, shown on this page, when a hub is connected. "
+            "<li>You can also connect to hub by following a short link to a saved session, created though the menu "
+            "'My Data &gt; My Sessions', if the Genome Browser had connected hubs when the session was saved."
+            "</ul></td></tr>");
     printf("</thead></table>");
     puts("</FORM>");      // return from within DIV and FROM is probably not a good idea
     puts("</div></div>"); // tabSection and .unlistedHubs
@@ -298,7 +300,7 @@ puts(
 	"<th>Display</th> "
 	"<th>Hub Name</th> "
 	"<th>Description</th> "
-	"<th>Assemblies<span class='assemblyClickNote'>Click to connect and browse directly</span></th> "
+	"<th>Assemblies<span class='assemblyClickNote'>Click to connect and browse directly. Click copy icon to copy URL to clipboard for sharing.</span></th> "
     "</tr>\n"
     "</thead>\n");
 
@@ -644,7 +646,7 @@ else
     ourCellEnd();
     }
 
-printGenomeList(hubInfo->hubUrl, dbListNames, count, hubHasNoError); 
+printGenomeList(hubInfo->hubUrl, dbListNames, count, hubHasNoError, FALSE);  
 printf("</tr>\n");
 }
 
@@ -1636,7 +1638,7 @@ puts("</FORM>");
 // we have three tabs for the public and unlisted hubs and hub development
 printf("<div id=\"tabs\">"
        "<ul> <li><a class=\"defaultDesc\" href=\"#publicHubs\">Public Hubs</a></li>"
-       "<li><a class=\"defaultDesc\" href=\"#unlistedHubs\">My Hubs</a></li> ");
+       "<li><a class=\"defaultDesc\" href=\"#unlistedHubs\">Connected Hubs</a></li> ");
 if (cfgOptionBooleanDefault("hgHubConnect.validateHub", TRUE))
     printf("<li><a class=\"hubDeveloperDesc\" href=\"#hubDeveloper\">Hub Development</a></li>");
 printf("</ul> ");
