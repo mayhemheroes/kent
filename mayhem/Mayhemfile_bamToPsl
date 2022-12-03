@@ -1,0 +1,5 @@
+project: kent
+target: bamtopsl
+
+cmds:
+  - cmd: /bamToPsl @@ out.psl
