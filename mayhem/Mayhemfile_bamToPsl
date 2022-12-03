@@ -1,5 +1,5 @@
 project: kent
-target: bamToPsl
+target: bamtopsl
 
 cmds:
   - cmd: /bamToPsl @@ out.psl
