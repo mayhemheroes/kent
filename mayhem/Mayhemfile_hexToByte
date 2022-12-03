@@ -1,0 +1,5 @@
+project: kent
+target: hextobyte
+
+cmds:
+  - cmd: /fuzz_hexToByte
