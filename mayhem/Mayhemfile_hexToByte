@@ -1,0 +1,6 @@
+project: kent
+target: hextobyte
+
+cmds:
+  - cmd: /mayhem/fuzz_hexToByte
+    libfuzzer: true

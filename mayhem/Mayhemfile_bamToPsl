@@ -1,0 +1,9 @@
+project: kent
+target: bamtopsl
+
+# The upstream `bamToPsl` is a raw-file CLI (historically fuzzed as `/bamToPsl @@ out.psl`) — a
+# subprocess file target gives Mayhem almost no coverage feedback, so it is driven in-process as a
+# libFuzzer harness over the same BAM->PSL code path (bamMustOpenLocal + bamToPslUnscored2).
+cmds:
+  - cmd: /mayhem/bamToPsl
+    libfuzzer: true
